@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>BacklinkScope | Professional Backlink Checker Tool</title>
+    <!-- Google Fonts + Font Awesome 6 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f4f7fc 0%, #eef2f5 100%);
+            font-family: 'Inter', sans-serif;
+            color: #1a2c3e;
+            line-height: 1.4;
+            padding: 2rem 1.5rem;
+        }
+
+        /* premium container */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* card & glassmorphism touches */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card:hover {
+            box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.12);
+        }
+
+        /* header area */
+        .brand-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1E3C72, #2A5298);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .logo span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #5b6e8c;
+            display: block;
+        }
+
+        .badge-pro {
+            background: #eef2ff;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c5f8a;
+        }
+
+        /* input section */
+        .input-wrapper {
+            background: white;
+            border-radius: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 8px 8px 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2edf2;
+            transition: all 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.15);
+        }
+
+        .url-input {
+            flex: 1;
+            border: none;
+            padding: 16px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            background: transparent;
+            font-family: 'Inter', monospace;
+        }
+
+        .check-btn {
+            background: linear-gradient(105deg, #1e3c72, #2a5298);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 12px rgba(30,60,114,0.2);
+        }
+
+        .check-btn i {
+            font-size: 1rem;
+        }
+
+        .check-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: linear-gradient(105deg, #163258, #1f4070);
+            box-shadow: 0 10px 18px rgba(30,60,114,0.3);
+        }
+
+        .check-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-msg {
+            margin-top: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #d14545;
+            background: #fff5f5;
+            padding: 8px 16px;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        /* stats grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1e3c72;
+            margin-top: 0.5rem;
+        }
+
+        .stat-label {
+            color: #5f7f9e;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+        }
+
+        .ratio-badge {
+            background: #eef2fa;
+            border-radius: 30px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* toolbar */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 1.5rem 0 1rem;
+            gap: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select, .sort-select {
+            background: white;
+            border: 1px solid #cfdfe8;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: white;
+            border: 1px solid #dce7ef;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn:hover {
+            background: #f0f4f9;
+            border-color: #bdd3e2;
+        }
+
+        /* table styles */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 24px;
+        }
+
+        .backlink-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .backlink-table th {
+            text-align: left;
+            padding: 1rem 1rem;
+            background: #f8fafd;
+            color: #2c4e6e;
+            font-weight: 600;
+            border-bottom: 1px solid #e4edf2;
+        }
+
+        .backlink-table td {
+            padding: 1rem 1rem;
+            border-bottom: 1px solid #ecf3f7;
+            vertical-align: middle;
+        }
+
+        .backlink-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            background: #e9f4e9;
+            color: #2b6e3c;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        .status-badge.inactive {
+            background: #ffe6e5;
+            color: #b13e3e;
+        }
+
+        .linktype {
+            font-weight: 500;
+        }
+
+        /* skeleton loader */
+        .skeleton-table {
+            width: 100%;
+        }
+
+        .skeleton-row {
+            display: flex;
+            gap: 20px;
+            padding: 16px;
+            background: #fafcff;
+            margin-bottom: 12px;
+            border-radius: 20px;
+        }
+
+        .skeleton-cell {
+            height: 24px;
+            background: linear-gradient(90deg, #e9edf2 25%, #f2f6fa 50%, #e9edf2 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 12px;
+            flex: 1;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #6883a0;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #7e95ae;
+            border-top: 1px solid #dae9f0;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 680px) {
+            body {
+                padding: 1.2rem;
+            }
+            .input-wrapper {
+                border-radius: 50px;
+                padding: 6px 6px 6px 18px;
+            }
+            .check-btn {
+                padding: 10px 18px;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header branding -->
+    <div class="brand-header">
+        <div class="logo">
+            <h1><i class="fas fa-link" style="color:#2a5298; margin-right: 8px;"></i>BacklinkScope</h1>
+            <span>Professional backlink intelligence · SEO suite grade</span>
+        </div>
+        <div class="badge-pro"><i class="fas fa-chart-line"></i> Real-time analytics</div>
+    </div>
+
+    <!-- Input card -->
+    <div class="card" style="padding: 1.8rem; margin-bottom: 2rem;">
+        <div class="input-wrapper">
+            <i class="fas fa-globe" style="color:#8aaec0;"></i>
+            <input type="text" id="urlInput" class="url-input" placeholder="https://example.com or example.com" value="https://ahrefs.com">
+            <button id="checkBtn" class="check-btn"><i class="fas fa-search"></i> Check Backlinks</button>
+        </div>
+        <div id="validationError" class="error-msg" style="display: none;"></div>
+        <div style="margin-top: 12px; font-size: 0.7rem; color:#7e8faa;"><i class="fas fa-database"></i> Demo mode: high-quality simulated backlink data (API-ready architecture)</div>
+    </div>
+
+    <!-- Results Dashboard -->
+    <div id="resultsDashboard" style="display: none;">
+        <!-- stats cards -->
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <!-- toolbar with filter & export -->
+        <div class="toolbar">
+            <div class="filter-group">
+                <i class="fas fa-filter" style="color:#5b7d9e;"></i>
+                <select id="typeFilter" class="filter-select">
+                    <option value="all">All link types</option>
+                    <option value="Dofollow">Dofollow only</option>
+                    <option value="Nofollow">Nofollow only</option>
+                </select>
+                <select id="statusFilter" class="filter-select">
+                    <option value="all">All statuses</option>
+                    <option value="active">Active only</option>
+                    <option value="inactive">Inactive only</option>
+                </select>
+                <select id="sortBy" class="sort-select">
+                    <option value="domain">Sort by Domain</option>
+                    <option value="type">Sort by Type</option>
+                </select>
+            </div>
+            <div class="action-buttons">
+                <button id="exportCsvBtn" class="icon-btn"><i class="fas fa-download"></i> Export CSV</button>
+                <button id="copyAllBtn" class="icon-btn"><i class="far fa-copy"></i> Copy domains</button>
+            </div>
+        </div>
+
+        <!-- Backlinks table -->
+        <div class="card" style="overflow: hidden; padding: 0;">
+            <div class="table-container">
+                <table class="backlink-table" id="backlinkTable">
+                    <thead>
+                        <tr><th>Referring Domain</th><th>Link Type</th><th>Status</th><th><i class="fas fa-copy"></i></th></tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- loading skeleton (hidden initially) -->
+    <div id="skeletonLoader" style="display: none;">
+        <div class="card" style="padding: 1.5rem;">
+            <div class="skeleton-table">
+                <div class="skeleton-row"><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div></div>
+                <div class="skeleton-row"><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div></div>
+                <div class="skeleton-row"><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div></div>
+                <div class="skeleton-row"><div class="skeleton-cell"></div><div class="skeleton-cell"></div><div class="skeleton-cell"></div></div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <i class="fas fa-chart-simple"></i> BacklinkScope — Enterprise-grade insights • Simulated data for demo • Real API ready
+    </footer>
+</div>
+
+<script>
+    (function(){
+        // ---------- MOCK BACKEND (production-ready structure with easy API hook) ----------
+        // This simulator returns structured backlink data as if from a premium API.
+        // For real API: replace fetchBacklinkData() with actual fetch() to a service like Moz, DataForSEO, etc.
+        // Fully async/await ready, error handling preserved.
+        
+        // Helper: validate URL (regex)
+        function isValidUrl(urlString) {
+            let trimmed = urlString.trim();
+            if (!trimmed) return false;
+            if (!/^https?:\/\//i.test(trimmed)) {
+                trimmed = 'https://' + trimmed;
+            }
+            const pattern = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+            return pattern.test(trimmed);
+        }
+
+        function normalizeUrl(input) {
+            let url = input.trim();
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+            }
+            return url;
+        }
+
+        // Mock data generator - consistent, realistic backlink profile
+        function generateBacklinkData(targetDomain) {
+            // Extract domain for variation
+            let domainBase = targetDomain.replace(/^https?:\/\//i, '').replace(/\/.*$/, '');
+            const domainsPool = [
+                "techcrunch.com", "wikipedia.org", "moz.com", "semrush.com", "hubspot.com", "wordpress.org",
+                "medium.com", "forbes.com", "entrepreneur.com", "backlinko.com", "searchenginejournal.com",
+                "neilpatel.com", "ahrefs.com", "sparktoro.com", "coursera.org"
+            ];
+            const types = ["Dofollow", "Nofollow"];
+            const statuses = ["active", "inactive"];
+            const totalBacklinks = Math.floor(Math.random() * 48) + 18; // between 18-65
+            let backlinks = [];
+            let dofollowCount = 0, nofollowCount = 0;
+            let activeCount = 0;
+            const uniqueDomainsSet = new Set();
+            
+            for (let i = 0; i < totalBacklinks; i++) {
+                let domain = domainsPool[Math.floor(Math.random() * domainsPool.length)];
+                if (Math.random() > 0.6) domain = "newsite" + (i % 7) + ".io";
+                uniqueDomainsSet.add(domain);
+                const linkType = types[Math.floor(Math.random() * types.length)];
+                if (linkType === "Dofollow") dofollowCount++;
+                else nofollowCount++;
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                if (status === "active") activeCount++;
+                backlinks.push({
+                    domain: domain,
+                    type: linkType,
+                    status: status,
+                });
+            }
+            // ensure diversity
+            const referringDomains = uniqueDomainsSet.size;
+            return {
+                totalBacklinks: backlinks.length,
+                referringDomains: referringDomains,
+                dofollow: dofollowCount,
+                nofollow: nofollowCount,
+                activeLinks: activeCount,
+                backlinksList: backlinks
+            };
+        }
+
+        // Simulated async API call (replace with real fetch later)
+        async function fetchBacklinkData(domainUrl) {
+            // simulate network latency (professional feel)
+            await new Promise(resolve => setTimeout(resolve, 900));
+            // Simulate occasional random error for robust error handling (5% chance to demonstrate)
+            if (Math.random() < 0.05) {
+                throw new Error("API rate limit simulated: please retry.");
+            }
+            const data = generateBacklinkData(domainUrl);
+            return {
+                success: true,
+                data: data
+            };
+        }
+
+        // DOM elements
+        const urlInput = document.getElementById('urlInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const validationErrorDiv = document.getElementById('validationError');
+        const resultsDashboard = document.getElementById('resultsDashboard');
+        const skeletonLoader = document.getElementById('skeletonLoader');
+        const statsGrid = document.getElementById('statsGrid');
+        const tableBody = document.getElementById('tableBody');
+        const typeFilter = document.getElementById('typeFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const sortBy = document.getElementById('sortBy');
+        const exportCsvBtn = document.getElementById('exportCsvBtn');
+        const copyAllBtn = document.getElementById('copyAllBtn');
+
+        let currentRawBacklinks = [];     // store raw backlinks array
+        let currentStats = null;
+
+        // Helper render stats
+        function renderStats(stats) {
+            const dofollowRatio = stats.dofollow + stats.nofollow > 0 ? ((stats.dofollow / (stats.dofollow + stats.nofollow)) * 100).toFixed(1) : 0;
+            statsGrid.innerHTML = `
+                <div class="stat-card"><div class="stat-label">Total Backlinks</div><div class="stat-number">${stats.totalBacklinks}</div><i class="fas fa-chart-simple" style="color:#8aaec0;"></i></div>
+                <div class="stat-card"><div class="stat-label">Referring Domains</div><div class="stat-number">${stats.referringDomains}</div><i class="fas fa-globe"></i></div>
+                <div class="stat-card"><div class="stat-label">Dofollow / Nofollow</div><div class="stat-number">${stats.dofollow} / ${stats.nofollow}</div><div class="ratio-badge">${dofollowRatio}% DoFollow</div></div>
+                <div class="stat-card"><div class="stat-label">Active Links</div><div class="stat-number">${stats.activeLinks}</div><i class="fas fa-check-circle"></i></div>
+            `;
+        }
+
+        // render table based on filters + sort
+        function renderTable() {
+            if (!currentRawBacklinks.length) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="no-data">No backlink data available</td></tr>';
+                return;
+            }
+            let filtered = [...currentRawBacklinks];
+            const typeVal = typeFilter.value;
+            const statusVal = statusFilter.value;
+            if (typeVal !== 'all') {
+                filtered = filtered.filter(link => link.type === typeVal);
+            }
+            if (statusVal !== 'all') {
+                filtered = filtered.filter(link => link.status === statusVal);
+            }
+            const sortValue = sortBy.value;
+            if (sortValue === 'domain') {
+                filtered.sort((a,b) => a.domain.localeCompare(b.domain));
+            } else if (sortValue === 'type') {
+                filtered.sort((a,b) => a.type.localeCompare(b.type));
+            }
+            tableBody.innerHTML = '';
+            filtered.forEach(link => {
+                const row = document.createElement('tr');
+                const domainCell = document.createElement('td');
+                domainCell.innerHTML = `<i class="fas fa-link" style="color:#6f9bc0; margin-right: 8px;"></i>${link.domain}`;
+                const typeCell = document.createElement('td');
+                typeCell.innerHTML = `<span class="linktype">${link.type === 'Dofollow' ? '<i class="fas fa-arrow-right" style="color:#2c7a4a;"></i> Dofollow' : '<i class="fas fa-ban" style="color:#b95b5b;"></i> Nofollow'}</span>`;
+                const statusCell = document.createElement('td');
+                const isActive = link.status === 'active';
+                statusCell.innerHTML = `<span class="status-badge ${!isActive ? 'inactive' : ''}">${isActive ? 'Active' : 'Inactive'}</span>`;
+                const copyCell = document.createElement('td');
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'icon-btn';
+                copyBtn.style.padding = '4px 12px';
+                copyBtn.style.fontSize = '0.7rem';
+                copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy';
+                copyBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(link.domain);
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => { copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy'; }, 1500);
+                };
+                copyCell.appendChild(copyBtn);
+                row.appendChild(domainCell);
+                row.appendChild(typeCell);
+                row.appendChild(statusCell);
+                row.appendChild(copyCell);
+                tableBody.appendChild(row);
+            });
+            if(filtered.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="no-data">No matching backlinks for current filters</td></tr>';
+            }
+        }
+
+        function updateUIFromData(stats, backlinks) {
+            currentStats = stats;
+            currentRawBacklinks = backlinks;
+            renderStats(stats);
+            renderTable();
+            resultsDashboard.style.display = 'block';
+        }
+
+        // Export CSV
+        function exportToCSV() {
+            if(!currentRawBacklinks.length) {
+                alert("No backlink data to export.");
+                return;
+            }
+            let filtered = [...currentRawBacklinks];
+            const typeVal = typeFilter.value;
+            const statusVal = statusFilter.value;
+            if (typeVal !== 'all') filtered = filtered.filter(l => l.type === typeVal);
+            if (statusVal !== 'all') filtered = filtered.filter(l => l.status === statusVal);
+            const headers = ["Referring Domain", "Link Type", "Status"];
+            const rows = filtered.map(bl => [bl.domain, bl.type, bl.status]);
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: "text/csv" });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `backlinks_export_${new Date().toISOString().slice(0,19)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Copy all domains (filtered)
+        function copyAllDomains() {
+            let filtered = [...currentRawBacklinks];
+            const typeVal = typeFilter.value;
+            const statusVal = statusFilter.value;
+            if (typeVal !== 'all') filtered = filtered.filter(l => l.type === typeVal);
+            if (statusVal !== 'all') filtered = filtered.filter(l => l.status === statusVal);
+            const domainsList = filtered.map(bl => bl.domain).join("\n");
+            if(!domainsList) { alert("No domains to copy"); return; }
+            navigator.clipboard.writeText(domainsList);
+            alert(`Copied ${filtered.length} domain(s) to clipboard!`);
+        }
+
+        // MAIN CHECK FUNCTION
+        async function performCheck() {
+            // validation
+            const rawUrl = urlInput.value;
+            if (!isValidUrl(rawUrl)) {
+                validationErrorDiv.style.display = 'block';
+                validationErrorDiv.innerText = '❌ Please enter a valid domain or URL (e.g., https://example.com or example.com)';
+                return;
+            }
+            validationErrorDiv.style.display = 'none';
+            const normalized = normalizeUrl(rawUrl);
+            
+            // disable button + loading state
+            checkBtn.disabled = true;
+            checkBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Analyzing...';
+            resultsDashboard.style.display = 'none';
+            skeletonLoader.style.display = 'block';
+            
+            try {
+                // simulate API call (modular, ready for real endpoint)
+                const response = await fetchBacklinkData(normalized);
+                if (response.success && response.data) {
+                    const statsPayload = {
+                        totalBacklinks: response.data.totalBacklinks,
+                        referringDomains: response.data.referringDomains,
+                        dofollow: response.data.dofollow,
+                        nofollow: response.data.nofollow,
+                        activeLinks: response.data.activeLinks,
+                    };
+                    updateUIFromData(statsPayload, response.data.backlinksList);
+                } else {
+                    throw new Error("Invalid data structure");
+                }
+            } catch (err) {
+                console.error(err);
+                validationErrorDiv.style.display = 'block';
+                validationErrorDiv.innerText = `⚠️ Network/API error: ${err.message}. Using robust simulation — try again.`;
+                resultsDashboard.style.display = 'none';
+            } finally {
+                skeletonLoader.style.display = 'none';
+                checkBtn.disabled = false;
+                checkBtn.innerHTML = '<i class="fas fa-search"></i> Check Backlinks';
+            }
+        }
+
+        // event listeners
+        checkBtn.addEventListener('click', performCheck);
+        typeFilter.addEventListener('change', () => renderTable());
+        statusFilter.addEventListener('change', () => renderTable());
+        sortBy.addEventListener('change', () => renderTable());
+        exportCsvBtn.addEventListener('click', exportToCSV);
+        copyAllBtn.addEventListener('click', copyAllDomains);
+        urlInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') performCheck(); });
+        
+        // optional: pre-run demo on load with default domain (but don't auto spam, let user click, but nice for showcase)
+        // provide first-run gentle hint, but not auto to respect UX, but we set placeholder domain and manual click not needed, but we let user click.
+        console.log("BacklinkScope ready — Premium backlink intelligence");
+    })();
+</script>
+</body>
+</html>
